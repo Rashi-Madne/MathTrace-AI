@@ -401,3 +401,63 @@ The initial equation-comparison prototype is working for the tested examples. Th
 ### 8. Next Development Milestone
 
 Review the mathematical limitations of the current comparison approach and design a more reliable validation strategy for a clearly defined subset of single-variable algebra transformations. Continue expanding automated tests before building the user interface.
+
+
+## Day 4 — Continued Development
+**Date:** November 2, 2026
+
+### Objective
+Strengthen the initial algebra equation validator by introducing explicit variable selection and exploring special equation cases using SymPy.
+
+### Work Completed
+
+**1. Improved equation comparison**
+- Updated `compare_equations()` to use SymPy's `solveset()` instead of the earlier `solve()` approach.
+- Introduced an explicit `variable` parameter to specify which unknown should be solved.
+- Restricted solution comparison to the real-number domain using `S.Reals`.
+- Updated `validate_solution_steps()` to pass the selected variable to the equation comparison function.
+
+**2. Updated automated tests**
+- Modified the existing seven tests to pass the variable `x` to the updated functions.
+- Executed the complete test suite using `python -m pytest -v`.
+- Result: **7 tests passed.**
+
+**3. Explored SymPy equation evaluation**
+- Investigated how SymPy automatically simplifies equations.
+- Observed that equations with contradictions may evaluate to `False`.
+- Observed that mathematical identities may evaluate to `True`.
+- Explored `evaluate=False` to preserve the equation structure for inspection.
+- Examined the use of `lhs` and `rhs` to access the two sides of an equation.
+
+**4. Explored solution sets**
+- Used `solveset()` to investigate equations with different solution types.
+- Verified that a linear equation can return a finite solution set, such as `{4}`.
+- Learned that equations with no solutions return `EmptySet`.
+- Learned that equations true for every real number return `Reals`.
+
+### Technical Understanding Gained
+- Difference between `solve()` and `solveset()`.
+- Purpose of explicitly passing a symbolic variable.
+- Meaning of the real-number domain.
+- Difference between an equation and a Boolean result.
+- How SymPy evaluates equations automatically.
+- How solution sets can be used to compare equations.
+
+### Current Limitations
+- The validator does not yet safely handle equations that SymPy evaluates to Boolean `True` or `False`.
+- Special solution cases have been explored but are not yet fully handled by the application.
+- Transformation-specific error classification and explanation are not implemented.
+- Unsupported and ambiguous mathematical inputs still need to be handled.
+
+### Current Status
+- Initial equation comparison implemented.
+- Sequential solution-step validation implemented.
+- Seven existing automated tests passing.
+- Investigation of special equation cases completed.
+- Robust handling of special cases remains pending.
+
+### Next Development Tasks
+1. Improve the validator to handle Boolean equations and special solution sets.
+2. Add automated tests for identities and equations with no solutions.
+3. Add safeguards for unsupported mathematical expressions.
+4. Continue developing transformation-aware error detection.
