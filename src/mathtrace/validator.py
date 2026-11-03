@@ -47,3 +47,26 @@ def validate_solution_steps(steps,variable):
         "status":"valid",
         "message":"All consecutive equation pairs passed the comparision."
     }
+
+
+
+def explain_error(original, transformed, variable):
+
+    is_valid = compare_equations(original, transformed, variable)
+
+    if is_valid:
+        return {
+            "status": "valid",
+            "error_category": None,
+            "explanation": "No mathematical error detected.",
+            "correction": None,
+            "corrected_equation": None
+        }
+    else:
+        return {
+            "status": "invalid",
+            "error_category": None,
+            "explanation": "The transformed equation does not preserve the original solution set.",
+            "correction": None,
+            "corrected_equation": None
+        }

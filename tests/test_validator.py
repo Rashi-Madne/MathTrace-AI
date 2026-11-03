@@ -1,5 +1,12 @@
 from sympy import symbols, Eq,S
-from mathtrace.validator import (get_solution_set,compare_equations,validate_solution_steps)
+
+from mathtrace.validator import (
+    get_solution_set,
+    compare_equations,
+    validate_solution_steps,
+    explain_error
+)
+
 
 x = symbols('x')
 
@@ -85,3 +92,22 @@ def test_boolean_true_matches_identity_equation():
     transformed = Eq(x, x, evaluate=False)
 
     assert compare_equations(original, transformed, x)
+
+def test_explain_error_for_valid_transition():
+    original = Eq(3*x + 6, 15, evaluate=False)
+    transformed = Eq(3*x, 9, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "valid"
+    assert result["error_category"] is None
+    assert result["explanation"] == "No mathematical error detected."
+
+def test_explain_error_for_invalid_transition():
+    original = Eq(2*x + 3, 11, evaluate=False)
+    transformed = Eq(2*x, 14, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+

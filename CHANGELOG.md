@@ -51,3 +51,12 @@ The project currently follows an initial development-stage versioning approach.
 - Updated `compare_equations()` to use the new solution-set helper.
 - Added automated tests for Boolean `True`, Boolean `False`, and identity-equation comparison.
 - Verified the complete test suite successfully: **10 tests passed**.
+
+
+### Added
+- Initial explanation engine for valid and invalid algebraic transitions.
+- Structured mathematical feedback output.
+- Tests for explanation engine behavior.
+
+### Limitations
+- Specific error classification and correction suggestions are not yet implemented.
