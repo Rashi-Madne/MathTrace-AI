@@ -43,3 +43,11 @@ The project currently follows an initial development-stage versioning approach.
 - Updated the existing automated tests to match the revised function signatures.
 - Verified the test suite successfully: **7 tests passed**.
 - Investigated SymPy's automatic Boolean evaluation and special equation solution sets.
+
+
+### Validator Boolean Handling — 2026-11-03
+
+- Added `get_solution_set()` to handle SymPy Boolean results and ordinary equations.
+- Updated `compare_equations()` to use the new solution-set helper.
+- Added automated tests for Boolean `True`, Boolean `False`, and identity-equation comparison.
+- Verified the complete test suite successfully: **10 tests passed**.

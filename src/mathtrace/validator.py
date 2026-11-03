@@ -1,15 +1,28 @@
-from sympy import solve
+from sympy import solveset, S
 
-def compare_equations(original,transformed):
-    original_solutions=solve(original)
-    transformed_solutions=solve(transformed)
+def get_solution_set(equation,variable):
+    if equation is S.true:
+        return S.Reals
 
-    if original_solutions==transformed_solutions:
+    if equation is S.false:
+        return S.EmptySet
+
+    return solveset(
+        equation.lhs-equation.rhs,variable,domain=S.Reals
+    )
+
+def compare_equations(original, transformed, variable):
+
+    original_solutions = get_solution_set(original, variable)
+
+    transformed_solutions = get_solution_set(transformed, variable)
+
+    if original_solutions == transformed_solutions:
         return True
     else:
         return False
 
-def validate_solution_steps(steps):
+def validate_solution_steps(steps,variable):
 
     if len(steps)<2:
         return{
@@ -21,7 +34,7 @@ def validate_solution_steps(steps):
         original=steps[i]
         transformed=steps[i+1]
 
-        is_valid=compare_equations(original,transformed)
+        is_valid=compare_equations(original,transformed,variable)
 
         if not is_valid:
             return {
