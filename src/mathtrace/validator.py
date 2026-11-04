@@ -1,4 +1,4 @@
-from sympy import solveset, S
+from sympy import solveset, S,simplify
 
 def get_solution_set(equation,variable):
     if equation is S.true:
@@ -48,7 +48,43 @@ def validate_solution_steps(steps,variable):
         "message":"All consecutive equation pairs passed the comparision."
     }
 
+def detect_sign_error(original, transformed, variable):
 
+    constant = simplify(original.lhs - variable)
+
+    expected_right = simplify(original.rhs - constant)
+    wrong_sign_right = simplify(original.rhs + constant)
+
+    if simplify(transformed.lhs - variable) != 0:
+        return None
+
+    if simplify(transformed.rhs - expected_right) == 0:
+        return None
+
+    if simplify(transformed.rhs - wrong_sign_right) == 0:
+        return "sign_error"
+
+    return None
+
+
+    constant = simplify(original.lhs - variable)
+
+    expected_right = simplify(original.rhs - constant)
+    wrong_sign_right = simplify(original.rhs + constant)
+
+    if simplify(transformed.lhs - variable) != 0:
+        return None
+
+    if simplify(transformed.rhs - expected_right) == 0:
+        return None
+
+    if simplify(transformed.rhs - wrong_sign_right) == 0:
+        return "sign_error"
+        error_category = detect_sign_error(
+            original, transformed, variable
+        )
+
+    return None
 
 def explain_error(original, transformed, variable):
 
@@ -62,11 +98,24 @@ def explain_error(original, transformed, variable):
             "correction": None,
             "corrected_equation": None
         }
-    else:
+
+    error_category = detect_sign_error(
+        original, transformed, variable
+    )
+
+    if error_category == "sign_error":
         return {
             "status": "invalid",
-            "error_category": None,
-            "explanation": "The transformed equation does not preserve the original solution set.",
-            "correction": None,
-            "corrected_equation": None
+            "error_category": "sign_error",
+            "explanation": "The constant was moved to the other side with the wrong sign.",
+            "correction": f"Apply the inverse operation to both sides to isolate {variable}.",
+            "corrected_equation": f"{variable} = {simplify(original.rhs - (original.lhs - variable))}"
         }
+
+    return {
+        "status": "invalid",
+        "error_category": None,
+        "explanation": "The transformed equation does not preserve the original solution set.",
+        "correction": None,
+        "corrected_equation": None
+    }

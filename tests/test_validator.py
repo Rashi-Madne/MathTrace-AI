@@ -1,12 +1,10 @@
-from sympy import symbols, Eq,S
-
+from sympy import symbols, Eq, S
 from mathtrace.validator import (
     get_solution_set,
     compare_equations,
     validate_solution_steps,
     explain_error
 )
-
 
 x = symbols('x')
 
@@ -111,3 +109,31 @@ def test_explain_error_for_invalid_transition():
 
     assert result["status"] == "invalid"
 
+def test_classifies_sign_error():
+
+    original = Eq(x - 4, 10, evaluate=False)
+    transformed = Eq(x, 10 - 4, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_category"] == "sign_error"
+    assert result["corrected_equation"] == "x = 14"
+
+def test_classifies_sign_error_with_different_constant():
+    original=Eq(x-7,15,evaluate=False)
+    transformed=Eq(x,15-7,evaluate=False)
+    result=explain_error(original,transformed,x)
+
+    assert result["error_category"]=="sign_error"
+    assert result["corrected_equation"]=="x = 22"
+
+def test_classifies_sign_error_with_positive_constant():
+
+    original = Eq(x + 3, 12, evaluate=False)
+    transformed = Eq(x, 12 + 3, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["error_category"] == "sign_error"
+    assert result["corrected_equation"] == "x = 9"

@@ -489,3 +489,37 @@ Improve the equation validator to handle equations that SymPy automatically eval
 - Define the algebraic transformations supported by the initial system.
 - Improve validation for unsupported or ambiguous expressions.
 - Develop transformation-specific error detection.
+
+
+
+## Day 6 — 4 November 2026
+
+### Objective
+Implement the initial mathematical error-classification and feedback functionality.
+
+### Work Completed
+1. Implemented `detect_sign_error()` to identify a specific incorrect sign-change pattern in linear equations.
+2. Integrated error classification into `explain_error()`.
+3. Implemented dynamic corrected-equation generation using SymPy expressions.
+4. Added automated tests for positive and negative constant cases.
+5. Verified the implementation using the complete pytest test suite.
+
+### Verification
+- Total automated tests: 15
+- Passed: 15
+- Failed: 0
+
+### Current Limitations
+- Sign-error detection currently supports a restricted equation pattern with a variable coefficient of 1.
+- Error classification is not yet generalized to other algebraic mistakes.
+- Explanation generation requires further improvement.
+- Handwritten equation recognition and the application interface are pending.
+
+### Outcome
+The mathematical validation module now supports initial sign-error classification and dynamically calculates corrected equations for the tested cases.
+
+### Next Steps
+- Generalize error detection carefully.
+- Improve explanatory feedback.
+- Expand automated test coverage.
+- Begin development of the Streamlit interface.

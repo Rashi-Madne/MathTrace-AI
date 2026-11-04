@@ -60,3 +60,17 @@ The project currently follows an initial development-stage versioning approach.
 
 ### Limitations
 - Specific error classification and correction suggestions are not yet implemented.
+
+
+### Added
+- Initial sign-error classification for supported linear equation transformations.
+- Integration of error classification into the explanation engine.
+- Dynamic corrected-equation generation using SymPy.
+- Automated tests covering sign errors with positive and negative constants.
+
+### Testing
+- 15 automated tests passing.
+
+### Limitations
+- Sign-error detection currently supports a restricted equation pattern.
+- Generalized algebraic error classification remains under development.
