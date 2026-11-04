@@ -49,9 +49,18 @@ def validate_solution_steps(steps,variable):
     }
 
 def detect_sign_error(original, transformed, variable):
+    coefficient = simplify(original.lhs.coeff(variable))
 
+    if coefficient != 1:
+        return None
+
+    if original.lhs.diff(variable, 2) != 0:
+        return None
     constant = simplify(original.lhs - variable)
-
+    if not constant.is_number:
+        return None
+    if not original.rhs.is_number:
+        return None
     expected_right = simplify(original.rhs - constant)
     wrong_sign_right = simplify(original.rhs + constant)
 

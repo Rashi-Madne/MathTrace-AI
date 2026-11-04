@@ -137,3 +137,47 @@ def test_classifies_sign_error_with_positive_constant():
 
     assert result["error_category"] == "sign_error"
     assert result["corrected_equation"] == "x = 9"
+
+def test_does_not_classify_sign_error_when_coefficient_is_not_one():
+
+    original = Eq(2*x - 4, 10, evaluate=False)
+    transformed = Eq(x, 10 + 4, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_category"] is None
+
+def test_does_not_classify_symbolic_constant_as_sign_error():
+
+    y = symbols('y')
+
+    original = Eq(x + y, 10, evaluate=False)
+    transformed = Eq(x, 10 + y, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_category"] is None
+
+
+def test_does_not_classify_quadratic_expression_as_sign_error():
+    original = Eq(x**2 + 4, 10, evaluate=False)
+    transformed = Eq(x, 10 - 4, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_category"] is None
+
+
+def test_does_not_classify_variable_dependent_rhs_as_sign_error():
+    y = symbols('y')
+
+    original = Eq(x - 4, y + 10, evaluate=False)
+    transformed = Eq(x, y + 10 + 4, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "valid"
+    assert result["error_category"] is None
