@@ -85,3 +85,18 @@ The project currently follows an initial development-stage versioning approach.
 ### Improved
 - Cleaned up unreachable duplicate logic in sign-error detection.
 - Expanded automated tests for parser and validator integration.
+
+### Added
+- Safe parsing of mathematical expressions and equations.
+- Multi-step algebra solution validation.
+- Text-based solution input validation.
+- Initial Streamlit interface for checking algebra solution steps.
+- Feedback for supported sign errors and possible arithmetic errors.
+
+### Improved
+- First-invalid-step identification in multi-step solutions.
+- Structured handling of malformed and unsupported mathematical input.
+
+### Testing
+- Added parser and integration test coverage.
+- Verified 49 automated tests successfully.

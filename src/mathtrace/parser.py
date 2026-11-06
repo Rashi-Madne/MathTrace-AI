@@ -1,6 +1,14 @@
+
 import ast
+
 from sympy import Eq, Symbol
+
+
 def validate_equation_format(text):
+    """
+    Check whether the input has the basic structure of an equation.
+    """
+
     if not isinstance(text, str):
         raise TypeError("Equation input must be text.")
 
@@ -18,12 +26,18 @@ def validate_equation_format(text):
     right_text = right_text.strip()
 
     if not left_text or not right_text:
-        raise ValueError("Both sides of the equation must contain an expression.")
+        raise ValueError(
+            "Both sides of the equation must contain an expression."
+        )
 
     return left_text, right_text
 
 
 def parse_expression(expression):
+    """
+    Safely convert a supported mathematical expression into a SymPy expression.
+    """
+
     try:
         parsed_expression = ast.parse(expression, mode="eval")
     except SyntaxError:
@@ -33,22 +47,27 @@ def parse_expression(expression):
 
 
 def parse_expression_node(node):
+    """
+    Recursively process the allowed nodes in Python's Abstract Syntax Tree.
+    """
 
-    # Handle numbers
+    # Handle numeric constants.
     if isinstance(node, ast.Constant):
-        if isinstance(node.value, (int, float)) and not isinstance(node.value, bool):
+        if isinstance(node.value, (int, float)) and not isinstance(
+            node.value, bool
+        ):
             return node.value
 
         raise ValueError("Only numeric constants are allowed.")
 
-    # Handle the variable x
+    # Handle the supported variable.
     if isinstance(node, ast.Name):
         if node.id == "x":
             return Symbol("x")
 
         raise ValueError("Only the variable 'x' is supported.")
 
-    # Handle binary operations: +, -, *, /, **
+    # Handle binary operations: +, -, *, /, **.
     if isinstance(node, ast.BinOp):
         left_value = parse_expression_node(node.left)
         right_value = parse_expression_node(node.right)
@@ -68,7 +87,7 @@ def parse_expression_node(node):
         if isinstance(node.op, ast.Pow):
             return left_value ** right_value
 
-    # Handle unary operations: -x, +x, -5
+    # Handle unary operations: -x, +x, -5.
     if isinstance(node, ast.UnaryOp):
         value = parse_expression_node(node.operand)
 
@@ -82,6 +101,10 @@ def parse_expression_node(node):
 
 
 def parse_equation(text):
+    """
+    Parse both sides of an equation and preserve its equality structure.
+    """
+
     left_text, right_text = validate_equation_format(text)
 
     left_expression = parse_expression(left_text)
@@ -89,7 +112,12 @@ def parse_equation(text):
 
     return Eq(left_expression, right_expression, evaluate=False)
 
+
 def parse_solution_steps(step_texts):
+    """
+    Parse a list of equation strings into SymPy equations.
+    """
+
     parsed_steps = []
 
     for step in step_texts:
@@ -97,55 +125,3 @@ def parse_solution_steps(step_texts):
         parsed_steps.append(equation)
 
     return parsed_steps
-
-def test_parse_multiple_solution_steps():
-    steps = [
-        "2*x + 3 = 11",
-        "2*x = 8",
-        "x = 4",
-    ]
-
-    parsed_steps = parse_solution_steps(steps)
-
-    assert len(parsed_steps) == 3
-    assert parsed_steps[0].lhs == 2 * Symbol("x") + 3
-    assert parsed_steps[1].lhs == 2 * Symbol("x")
-    assert parsed_steps[2].lhs == Symbol("x")
-
-
-
-def test_text_solution_steps_accepts_valid_work():
-    steps = [
-        "2*x + 3 = 11",
-        "2*x = 8",
-        "x = 4"
-    ]
-
-    result = validate_text_solution_steps(steps, Symbol("x"))
-
-    assert result["status"] == "valid"
-
-
-def test_text_solution_steps_detects_incorrect_work():
-    steps = [
-        "2*x + 3 = 11",
-        "2*x = 10",
-        "x = 5"
-    ]
-
-    result = validate_text_solution_steps(steps, Symbol("x"))
-
-    assert result["status"] == "invalid"
-    assert result["error_step"] == 1
-
-
-def test_text_solution_steps_handles_invalid_input():
-    steps = [
-        "2*x + 3 = 11",
-        "2*x + = 8"
-    ]
-
-    result = validate_text_solution_steps(steps, Symbol("x"))
-
-    assert result["status"] == "invalid_input"
-    assert "message" in result
