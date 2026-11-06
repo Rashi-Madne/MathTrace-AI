@@ -66,6 +66,19 @@ def validate_text_solution_steps(step_texts, variable):
     return validate_solution_steps(parsed_steps, variable)
 
 
+def validate_text_solution_steps(step_texts, variable):
+    try:
+        parsed_steps = parse_solution_steps(step_texts)
+
+    except (ValueError, TypeError) as error:
+        return {
+            "status": "invalid_input",
+            "message": str(error)
+        }
+
+    return validate_solution_steps(parsed_steps, variable)
+
+
 
 
 

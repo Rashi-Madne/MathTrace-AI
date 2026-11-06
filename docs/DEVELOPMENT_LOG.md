@@ -523,3 +523,29 @@ The mathematical validation module now supports initial sign-error classificatio
 - Improve explanatory feedback.
 - Expand automated test coverage.
 - Begin development of the Streamlit interface.
+
+
+### Day 7 — Safe Equation Parsing and Text-Based Validation
+
+**Completed work**
+- Implemented a safe mathematical expression parser using Python's Abstract Syntax Tree (AST).
+- Added support for numeric constants, the variable `x`, arithmetic operators, unary operators, and parentheses.
+- Implemented equation parsing and multiple-step solution parsing.
+- Integrated parsed equations with the existing symbolic validation engine.
+- Added controlled handling of malformed equation input through an `invalid_input` result.
+- Removed unreachable duplicate logic from the sign-error detection function.
+
+**Testing**
+- Added parser unit tests and parser-validator integration tests.
+- Verified valid transformations, incorrect transformations, and malformed equation input.
+- Full test suite passed.
+
+**Engineering outcome**
+
+MathTrace AI can now accept a sequence of typed algebra equations, convert them into SymPy equations, and validate consecutive transformations using solution-set equivalence.
+
+**Current limitations**
+- Only the variable `x` is supported.
+- Multiplication must be explicit, such as `2*x`.
+- Handwritten equation recognition is not implemented.
+- Error classification remains limited to the implemented rule-based checks.

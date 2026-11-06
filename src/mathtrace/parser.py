@@ -1,7 +1,5 @@
 import ast
 from sympy import Eq, Symbol
-
-
 def validate_equation_format(text):
     if not isinstance(text, str):
         raise TypeError("Equation input must be text.")
@@ -113,3 +111,41 @@ def test_parse_multiple_solution_steps():
     assert parsed_steps[0].lhs == 2 * Symbol("x") + 3
     assert parsed_steps[1].lhs == 2 * Symbol("x")
     assert parsed_steps[2].lhs == Symbol("x")
+
+
+
+def test_text_solution_steps_accepts_valid_work():
+    steps = [
+        "2*x + 3 = 11",
+        "2*x = 8",
+        "x = 4"
+    ]
+
+    result = validate_text_solution_steps(steps, Symbol("x"))
+
+    assert result["status"] == "valid"
+
+
+def test_text_solution_steps_detects_incorrect_work():
+    steps = [
+        "2*x + 3 = 11",
+        "2*x = 10",
+        "x = 5"
+    ]
+
+    result = validate_text_solution_steps(steps, Symbol("x"))
+
+    assert result["status"] == "invalid"
+    assert result["error_step"] == 1
+
+
+def test_text_solution_steps_handles_invalid_input():
+    steps = [
+        "2*x + 3 = 11",
+        "2*x + = 8"
+    ]
+
+    result = validate_text_solution_steps(steps, Symbol("x"))
+
+    assert result["status"] == "invalid_input"
+    assert "message" in result

@@ -74,3 +74,14 @@ The project currently follows an initial development-stage versioning approach.
 ### Limitations
 - Sign-error detection currently supports a restricted equation pattern.
 - Generalized algebraic error classification remains under development.
+
+
+### Added
+- Safe AST-based parsing of mathematical expressions.
+- Parsing of complete equations and multiple solution steps.
+- Text-based integration with the symbolic equation validator.
+- Controlled invalid-input responses for malformed equations.
+
+### Improved
+- Cleaned up unreachable duplicate logic in sign-error detection.
+- Expanded automated tests for parser and validator integration.
