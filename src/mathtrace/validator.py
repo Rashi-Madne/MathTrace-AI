@@ -139,7 +139,6 @@ def detect_sign_error(original, transformed, variable):
     return None
 
 
-
 def detect_arithmetic_error(original, transformed, variable):
     """
     Detect a possible arithmetic error when isolating a variable
@@ -148,15 +147,20 @@ def detect_arithmetic_error(original, transformed, variable):
 
     coefficient = simplify(original.lhs.coeff(variable))
 
-    if coefficient != 1:
+    if coefficient == 0:
         return None
 
     if original.lhs.diff(variable, 2) != 0:
         return None
 
-    constant = simplify(original.lhs - variable)
+    constant = simplify(
+        original.lhs - coefficient * variable
+    )
 
-    if not constant.is_number or constant == 0:
+    if not constant.is_number:
+        return None
+
+    if coefficient != 1 and constant != 0:
         return None
 
     if not original.rhs.is_number:
@@ -165,13 +169,11 @@ def detect_arithmetic_error(original, transformed, variable):
     if simplify(transformed.lhs - variable) != 0:
         return None
 
-    expected_right = simplify(original.rhs - constant)
-    wrong_sign_right = simplify(original.rhs + constant)
+    expected_right = simplify(
+        (original.rhs - constant) / coefficient
+    )
 
     if simplify(transformed.rhs - expected_right) == 0:
-        return None
-
-    if simplify(transformed.rhs - wrong_sign_right) == 0:
         return None
 
     return "possible_arithmetic_error"
@@ -221,7 +223,6 @@ def explain_error(original, transformed, variable):
             )
         }
 
-
     arithmetic_error = detect_arithmetic_error(
         original,
         transformed,
@@ -230,8 +231,17 @@ def explain_error(original, transformed, variable):
 
     if arithmetic_error == "possible_arithmetic_error":
 
-        constant = simplify(original.lhs - variable)
-        expected_right = simplify(original.rhs - constant)
+        coefficient = simplify(
+            original.lhs.coeff(variable)
+        )
+
+        constant = simplify(
+            original.lhs - coefficient * variable
+        )
+
+        expected_right = simplify(
+            (original.rhs - constant) / coefficient
+        )
 
         return {
             "status": "invalid",
@@ -242,13 +252,13 @@ def explain_error(original, transformed, variable):
             ),
             "correction": (
                 f"Recheck the inverse-operation calculation: "
-                f"{original.rhs} - ({constant}) = {expected_right}."
+                f"({original.rhs} - ({constant})) / "
+                f"({coefficient}) = {expected_right}."
             ),
             "corrected_equation": (
                 f"{variable} = {expected_right}"
             )
         }
-
 
     return {
         "status": "invalid",
