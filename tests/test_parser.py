@@ -217,3 +217,18 @@ def test_text_solution_steps_detects_possible_arithmetic_error():
     assert result["corrected_equation"] == "x = 8"
 
     assert "arithmetic result may be incorrect" in result["explanation"]
+
+
+def test_text_solution_steps_detects_arithmetic_error_with_coefficient():
+    steps = [
+        "2*x + 3 = 11",
+        "2*x = 8",
+        "x = 18",
+    ]
+
+    result = validate_text_solution_steps(steps, Symbol("x"))
+
+    assert result["status"] == "invalid"
+    assert result["error_step"] == 2
+    assert result["error_category"] == "possible_arithmetic_error"
+    assert result["corrected_equation"] == "x = 4"
