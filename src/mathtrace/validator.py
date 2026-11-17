@@ -160,14 +160,21 @@ def detect_arithmetic_error(original, transformed, variable):
     if not constant.is_number:
         return None
 
-    if coefficient != 1 and constant != 0:
-        return None
 
     if not original.rhs.is_number:
         return None
 
     if simplify(transformed.lhs - variable) != 0:
         return None
+
+    intermediate_right = simplify(original.rhs - constant)
+
+    if coefficient != 1 and simplify(
+    transformed.rhs - intermediate_right
+) == 0:
+        return None
+
+    
 
     expected_right = simplify(
         (original.rhs - constant) / coefficient

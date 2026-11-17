@@ -1,102 +1,130 @@
 # Changelog
 
-All notable changes to MathTrace AI will be documented in this file.
+All notable changes to MathTrace AI are documented in this file.
 
-The project currently follows an initial development-stage versioning approach.
+The project is currently in its initial development stage. Changes are recorded under the `Unreleased` section until a formal version is published.
 
 ## [Unreleased]
 
 ### Development Milestone — 2026-11-01
 
-### Added
+#### Added
 - Initial project workspace and Python virtual environment.
 - Dependency configuration using `requirements.txt`.
 - Git repository initialization with the `main` branch.
-- `.gitignore` configuration for local environment files, caches, and secrets.
-- Initial project directory structure.
-- Python package initialization file.
-- Project requirements documentation.
-- Proposed system architecture documentation.
-- Development log.
+- `.gitignore` configuration for local environment files, caches, and sensitive files.
+- Initial project directory structure and Python package initialization.
+- Project requirements, proposed architecture, and development log documentation.
 - Initial project README.
-- Verification of the primary Python library imports.
+- Verification of primary Python library imports.
 
-### Project Status
-- Core mathematical reasoning engine: Not implemented.
-- Earliest-error detection: Not implemented.
-- Explanation generation: Not implemented.
-- Streamlit interface: Not implemented.
-- Automated application tests: Not implemented.
+### Validator Implementation — 2026-11-02
 
-### Development Milestone — 2026-11-02
+#### Added
+- Initial equation comparison functionality using SymPy.
+- Sequential solution-step validation in `src/mathtrace/validator.py`.
+- Automated tests for equation comparison, invalid transitions, valid sequences, and insufficient input.
 
-- Added `pyproject.toml` with project metadata, dependencies, package discovery, and pytest configuration.
-- Installed MathTrace AI in editable mode.
-- Implemented initial equation comparison and sequential solution-step validation in `src/mathtrace/validator.py`.
-- Added automated tests covering equation comparison, invalid transitions, valid sequences, and insufficient input.
-- Verified the initial test suite: **7 tests passed**.
-
-### Validator Improvement — 2026-11-02
-
+#### Improved
 - Updated equation comparison to use SymPy's `solveset()` with an explicit variable and real-number domain.
-- Updated sequential solution validation to pass the selected variable.
-- Updated the existing automated tests to match the revised function signatures.
-- Verified the test suite successfully: **7 tests passed**.
-- Investigated SymPy's automatic Boolean evaluation and special equation solution sets.
+- Updated sequential validation to pass the selected variable.
 
+#### Testing
+- Verified 7 automated tests successfully.
 
-### Validator Boolean Handling — 2026-11-03
+### Boolean Handling — 2026-11-03
 
-- Added `get_solution_set()` to handle SymPy Boolean results and ordinary equations.
+#### Added
+- `get_solution_set()` to handle SymPy Boolean results and ordinary equations.
+- Automated tests for Boolean `True`, Boolean `False`, and identity-equation comparison.
+
+#### Improved
 - Updated `compare_equations()` to use the new solution-set helper.
-- Added automated tests for Boolean `True`, Boolean `False`, and identity-equation comparison.
-- Verified the complete test suite successfully: **10 tests passed**.
 
+#### Testing
+- Verified 10 automated tests successfully.
 
-### Added
+### Explanation and Sign-Error Detection — 2026-11-04
+
+#### Added
 - Initial explanation engine for valid and invalid algebraic transitions.
-- Structured mathematical feedback output.
-- Tests for explanation engine behavior.
-
-### Limitations
-- Specific error classification and correction suggestions are not yet implemented.
-
-
-### Added
+- Structured mathematical feedback.
 - Initial sign-error classification for supported linear equation transformations.
-- Integration of error classification into the explanation engine.
 - Dynamic corrected-equation generation using SymPy.
-- Automated tests covering sign errors with positive and negative constants.
+- Automated tests for sign errors involving positive and negative constants.
 
-### Testing
-- 15 automated tests passing.
+#### Testing
+- Verified 15 automated tests successfully.
 
-### Limitations
-- Sign-error detection currently supports a restricted equation pattern.
+#### Limitations
+- Sign-error detection supports restricted equation patterns.
 - Generalized algebraic error classification remains under development.
 
+### Text Parser and Streamlit Prototype — 2026-11-06
 
-### Added
-- Safe AST-based parsing of mathematical expressions.
+#### Added
+- Safe AST-based parsing of mathematical expressions and equations.
 - Parsing of complete equations and multiple solution steps.
 - Text-based integration with the symbolic equation validator.
 - Controlled invalid-input responses for malformed equations.
-
-### Improved
-- Cleaned up unreachable duplicate logic in sign-error detection.
-- Expanded automated tests for parser and validator integration.
-
-### Added
-- Safe parsing of mathematical expressions and equations.
-- Multi-step algebra solution validation.
-- Text-based solution input validation.
 - Initial Streamlit interface for checking algebra solution steps.
 - Feedback for supported sign errors and possible arithmetic errors.
 
-### Improved
+#### Improved
 - First-invalid-step identification in multi-step solutions.
 - Structured handling of malformed and unsupported mathematical input.
+- Removed unreachable duplicate logic in sign-error detection.
 
-### Testing
-- Added parser and integration test coverage.
+#### Testing
+- Expanded parser, validator, and integration test coverage.
 - Verified 49 automated tests successfully.
+
+### Arithmetic Error Detection Improvements — 2026-11-17
+
+#### Added
+- Regression test for arithmetic error detection involving a non-unit coefficient.
+- Coverage for the example transition:
+  - `2*x + 3 = 11`
+  - `2*x = 8`
+  - `x = 18`
+
+#### Improved
+- Refined arithmetic error detection to reduce incorrect classifications.
+- Added safeguards for transformations involving non-unit coefficients and nonzero constants.
+- Improved corrected-equation calculation using the original equation's coefficient and constant.
+- Improved feedback for supported arithmetic errors.
+
+#### Testing
+- Verified the complete automated test suite: **50 tests passed**.
+- Confirmed the regression test detects the incorrect final step and produces the expected correction: `x = 4`.
+
+### Documentation Improvements — 2026-11-17
+
+#### Updated
+- Reworked the README to reflect the current implementation and setup instructions.
+- Updated architecture documentation to describe implemented components.
+- Revised explanation engine design and supported transformation documentation.
+- Clarified current feedback requirements and functional requirements.
+- Documented implementation limitations and future development scope.
+
+---
+
+## Current Implementation Status
+
+- Typed algebra solution input: Implemented.
+- Safe expression and equation parsing: Implemented.
+- Sequential solution-step validation: Implemented.
+- First detected invalid transition identification: Implemented.
+- Supported sign-error feedback: Implemented.
+- Heuristic possible arithmetic-error feedback: Implemented.
+- Streamlit prototype: Implemented.
+- Automated test suite: 59 tests passing.
+- Handwritten equation recognition (OCR): Not implemented.
+- Generalized algebraic error classification: Not implemented.
+
+## Notes
+
+- This changelog records development-stage changes, not formal software releases.
+- Error detection is currently limited to selected linear-equation patterns.
+- Passing automated tests does not establish universal mathematical error-detection accuracy.
+- Future changes will be documented here as development progresses.

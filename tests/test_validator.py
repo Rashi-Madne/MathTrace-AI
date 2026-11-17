@@ -181,3 +181,33 @@ def test_does_not_classify_variable_dependent_rhs_as_sign_error():
 
     assert result["status"] == "valid"
     assert result["error_category"] is None
+
+def test_classifies_possible_arithmetic_error():
+    original = Eq(2*x, 8, evaluate=False)
+    transformed = Eq(x, 5, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_category"] == "possible_arithmetic_error"
+    assert result["corrected_equation"] == "x = 4"
+
+def test_does_not_classify_wrong_coefficient_as_arithmetic_error():
+    original = Eq(2*x, 8, evaluate=False)
+    transformed = Eq(3*x, 4, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_category"] is None
+
+
+def test_classifies_arithmetic_error_with_constant():
+    original = Eq(2*x + 3, 11, evaluate=False)
+    transformed = Eq(x, 5, evaluate=False)
+
+    result = explain_error(original, transformed, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_category"] == "possible_arithmetic_error"
+    assert result["corrected_equation"] == "x = 4"
