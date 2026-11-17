@@ -38,6 +38,17 @@ def parse_expression(expression):
     Safely convert a supported mathematical expression into a SymPy expression.
     """
 
+    # Check that the input is text before passing it to ast.parse().
+    if not isinstance(expression, str):
+        raise TypeError("Expression input must be text.")
+
+    try:
+        parsed_expression = ast.parse(expression, mode="eval")
+    except SyntaxError:
+        raise ValueError("Invalid mathematical expression.")
+
+    return parse_expression_node(parsed_expression.body)
+
     try:
         parsed_expression = ast.parse(expression, mode="eval")
     except SyntaxError:
@@ -117,6 +128,14 @@ def parse_solution_steps(step_texts):
     """
     Parse a list of equation strings into SymPy equations.
     """
+
+    if not isinstance(step_texts, list):
+        raise TypeError(
+            "Solution steps must be provided as a list."
+        )
+
+    if not step_texts:
+        raise ValueError("At least one solution step is required.")
 
     parsed_steps = []
 

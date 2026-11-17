@@ -50,6 +50,42 @@ def test_equation_with_missing_right_side_is_rejected():
     with pytest.raises(ValueError):
         validate_equation_format("x + 2 = ")
 
+def test_parse_expression_rejects_non_string_input():
+    with pytest.raises(TypeError, match="Expression input must be text"):
+        parse_expression(123)
+
+def test_validate_equation_format_rejects_non_string_input():
+    with pytest.raises(TypeError, match="Equation input must be text"):
+        validate_equation_format(123)
+
+def test_parse_solution_steps_rejects_empty_input():
+    with pytest.raises(ValueError, match="At least one solution step is required"):
+        parse_solution_steps([])
+
+def test_parse_solution_steps_rejects_non_list_input():
+    with pytest.raises(TypeError, match="Solution steps must be provided as a list"):
+        parse_solution_steps("2*x = 4")
+
+def test_parse_solution_steps_rejects_non_string_step():
+    steps = [
+        "2*x + 3 = 11",
+        123,
+        "x = 4"
+    ]
+
+    with pytest.raises(TypeError, match="Equation input must be text"):
+        parse_solution_steps(steps)
+
+def test_parse_solution_steps_rejects_empty_step():
+    steps = [
+        "2*x + 3 = 11",
+        "",
+        "x = 4"
+    ]
+
+    with pytest.raises(ValueError, match="Equation input cannot be empty"):
+        parse_solution_steps(steps)
+
 
 def test_parse_integer():
     assert parse_expression("5") == 5
