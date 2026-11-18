@@ -38,16 +38,8 @@ def parse_expression(expression):
     Safely convert a supported mathematical expression into a SymPy expression.
     """
 
-    # Check that the input is text before passing it to ast.parse().
     if not isinstance(expression, str):
         raise TypeError("Expression input must be text.")
-
-    try:
-        parsed_expression = ast.parse(expression, mode="eval")
-    except SyntaxError:
-        raise ValueError("Invalid mathematical expression.")
-
-    return parse_expression_node(parsed_expression.body)
 
     try:
         parsed_expression = ast.parse(expression, mode="eval")
@@ -92,10 +84,24 @@ def parse_expression_node(node):
         if isinstance(node.op, ast.Mult):
             return left_value * right_value
 
+        # Handle division and prevent division by zero.
         if isinstance(node.op, ast.Div):
+            if right_value == 0:
+                raise ValueError("Division by zero is not allowed.")
+
             return left_value / right_value
 
+        # Handle exponentiation and prevent zero raised to a negative power.
         if isinstance(node.op, ast.Pow):
+            if (
+                left_value == 0
+                and isinstance(right_value, (int, float))
+                and right_value < 0
+            ):
+                raise ValueError(
+                    "Zero cannot be raised to a negative power."
+                )
+
             return left_value ** right_value
 
     # Handle unary operations: -x, +x, -5.

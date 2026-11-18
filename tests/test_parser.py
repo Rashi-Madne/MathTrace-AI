@@ -268,3 +268,21 @@ def test_text_solution_steps_detects_arithmetic_error_with_coefficient():
     assert result["error_step"] == 2
     assert result["error_category"] == "possible_arithmetic_error"
     assert result["corrected_equation"] == "x = 4"
+
+
+def test_parse_division_by_zero():
+    with pytest.raises(ValueError):
+        parse_expression("1/0")
+
+def test_parse_symbolic_division_by_zero():
+    with pytest.raises(ValueError):
+        parse_expression("x/0")
+
+def test_parse_division_by_expression_that_simplifies_to_zero():
+    with pytest.raises(ValueError):
+        parse_expression("x/(1-1)")
+
+
+def test_parse_zero_raised_to_negative_power():
+    with pytest.raises(ValueError):
+        parse_expression("0**-1")
