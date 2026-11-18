@@ -1,24 +1,42 @@
 
 from sympy import solveset, S, simplify
-from mathtrace.parser import parse_solution_steps
+from mathtrace.parser import ParsedEquation, parse_solution_steps
 
 
 def get_solution_set(equation, variable):
     """
-    Find all real values of the variable that satisfy an equation.
+    Find all real solutions while respecting denominator restrictions.
     """
 
+    restrictions = []
+
+    if isinstance(equation, ParsedEquation):
+        restrictions = equation.restrictions
+        equation = equation.equation
+
     if equation is S.true:
-        return S.Reals
+        solution_set = S.Reals
 
-    if equation is S.false:
-        return S.EmptySet
+    elif equation is S.false:
+        solution_set = S.EmptySet
 
-    return solveset(
-        equation.lhs - equation.rhs,
-        variable,
-        domain=S.Reals
-    )
+    else:
+        solution_set = solveset(
+            equation.lhs - equation.rhs,
+            variable,
+            domain=S.Reals
+        )
+
+    for denominator in restrictions:
+        forbidden_values = solveset(
+            denominator,
+            variable,
+            domain=S.Reals
+        )
+
+        solution_set = solution_set - forbidden_values
+
+    return solution_set
 
 
 def compare_equations(original, transformed, variable):
@@ -104,19 +122,21 @@ def validate_text_solution_steps(step_texts, variable):
 
 def detect_sign_error(original, transformed, variable):
     """
-    Detect a specific sign error when moving a constant
-    across the equality sign in a supported linear equation.
+    Detect a sign error when moving a constant across
+    the equality sign in a supported linear equation.
     """
 
     coefficient = simplify(original.lhs.coeff(variable))
 
-    if coefficient != 1:
+    if coefficient == 0:
         return None
 
     if original.lhs.diff(variable, 2) != 0:
         return None
 
-    constant = simplify(original.lhs - variable)
+    constant = simplify(
+        original.lhs - coefficient * variable
+    )
 
     if not constant.is_number:
         return None
@@ -124,10 +144,30 @@ def detect_sign_error(original, transformed, variable):
     if not original.rhs.is_number:
         return None
 
-    expected_right = simplify(original.rhs - constant)
-    wrong_sign_right = simplify(original.rhs + constant)
+    variable_term = simplify(coefficient * variable)
+    transformed_left = simplify(transformed.lhs)
 
-    if simplify(transformed.lhs - variable) != 0:
+    if transformed_left == variable_term:
+
+        expected_right = simplify(
+            original.rhs - constant
+        )
+
+        wrong_sign_right = simplify(
+            original.rhs + constant
+        )
+
+    elif transformed_left == variable:
+
+        expected_right = simplify(
+            (original.rhs - constant) / coefficient
+        )
+
+        wrong_sign_right = simplify(
+            (original.rhs + constant) / coefficient
+        )
+
+    else:
         return None
 
     if simplify(transformed.rhs - expected_right) == 0:
@@ -160,7 +200,6 @@ def detect_arithmetic_error(original, transformed, variable):
     if not constant.is_number:
         return None
 
-
     if not original.rhs.is_number:
         return None
 
@@ -170,11 +209,9 @@ def detect_arithmetic_error(original, transformed, variable):
     intermediate_right = simplify(original.rhs - constant)
 
     if coefficient != 1 and simplify(
-    transformed.rhs - intermediate_right
-) == 0:
+        transformed.rhs - intermediate_right
+    ) == 0:
         return None
-
-    
 
     expected_right = simplify(
         (original.rhs - constant) / coefficient
@@ -213,6 +250,37 @@ def explain_error(original, transformed, variable):
     )
 
     if error_category == "sign_error":
+
+        coefficient = simplify(
+            original.lhs.coeff(variable)
+        )
+
+        constant = simplify(
+            original.lhs - coefficient * variable
+        )
+
+        if simplify(transformed.lhs - coefficient * variable) == 0:
+
+            corrected_right = simplify(
+                original.rhs - constant
+            )
+
+            corrected_equation = (
+                f"{coefficient}*{variable} = {corrected_right}"
+                if coefficient != 1
+                else f"{variable} = {corrected_right}"
+            )
+
+        else:
+
+            corrected_right = simplify(
+                (original.rhs - constant) / coefficient
+            )
+
+            corrected_equation = (
+                f"{variable} = {corrected_right}"
+            )
+
         return {
             "status": "invalid",
             "error_category": "sign_error",
@@ -221,13 +289,11 @@ def explain_error(original, transformed, variable):
                 "with the wrong sign."
             ),
             "correction": (
-                f"Apply the inverse operation to both sides "
-                f"to isolate {variable}."
+                "When moving a constant across the equality sign, "
+                "use the opposite operation: addition becomes "
+                "subtraction, and subtraction becomes addition."
             ),
-            "corrected_equation": (
-                f"{variable} = "
-                f"{simplify(original.rhs - (original.lhs - variable))}"
-            )
+            "corrected_equation": corrected_equation
         }
 
     arithmetic_error = detect_arithmetic_error(
