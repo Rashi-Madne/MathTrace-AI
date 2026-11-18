@@ -1,8 +1,20 @@
 
 import ast
-
+from dataclasses import dataclass
 from sympy import Eq, Symbol
 
+@dataclass
+class ParsedEquation:
+    equation: object
+    restrictions: list
+
+    @property
+    def lhs(self):
+        return self.equation.lhs
+
+    @property
+    def rhs(self):
+        return self.equation.rhs
 
 def validate_equation_format(text):
     """
@@ -64,6 +76,7 @@ def parse_expression_node(node):
         raise ValueError("Only numeric constants are allowed.")
 
     # Handle the supported variable.
+
     if isinstance(node, ast.Name):
         if node.id == "x":
             return Symbol("x")
@@ -116,6 +129,25 @@ def parse_expression_node(node):
 
     raise ValueError("Unsupported mathematical expression.")
 
+def collect_denominator_restrictions(node):
+    """
+    Collect denominator expressions that must not equal zero.
+    """
+
+    restrictions = []
+
+    if isinstance(node, ast.BinOp):
+
+        if isinstance(node.op, ast.Div):
+            denominator = parse_expression_node(node.right)
+            restrictions.append(denominator)
+
+        for child in ast.iter_child_nodes(node):
+            restrictions.extend(
+                collect_denominator_restrictions(child)
+            )
+
+    return restrictions
 
 def parse_equation(text):
     """
@@ -124,10 +156,31 @@ def parse_equation(text):
 
     left_text, right_text = validate_equation_format(text)
 
-    left_expression = parse_expression(left_text)
-    right_expression = parse_expression(right_text)
+    try:
+        left_ast = ast.parse(left_text, mode="eval").body
+        right_ast = ast.parse(right_text, mode="eval").body
 
-    return Eq(left_expression, right_expression, evaluate=False)
+    except SyntaxError:
+        raise ValueError("Invalid mathematical expression.")
+
+    restrictions = (
+        collect_denominator_restrictions(left_ast)
+        + collect_denominator_restrictions(right_ast)
+    )
+
+    left_expression = parse_expression_node(left_ast)
+    right_expression = parse_expression_node(right_ast)
+
+    equation = Eq(
+        left_expression,
+        right_expression,
+        evaluate=False
+    )
+
+    return ParsedEquation(
+        equation=equation,
+        restrictions=restrictions
+    )
 
 
 def parse_solution_steps(step_texts):
