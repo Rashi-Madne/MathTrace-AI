@@ -618,6 +618,61 @@ Regression coverage has been strengthened to help prevent the identified classif
 - Broader algebraic transformation support requires further development.
 
 ---
+---
+
+## November 18, 2026 — Arithmetic Error Detection Refinement and Regression Verification
+
+### Objective
+
+Review and refine the arithmetic-error detection implementation, strengthen regression coverage, and document the latest development milestone.
+
+### 1. Arithmetic Error Detection Refinement
+
+- Reviewed the implementation of `detect_arithmetic_error()` in `src/mathtrace/validator.py`.
+- Refined the detection conditions to support arithmetic-error cases involving both variable coefficients and constant terms.
+- Introduced a safeguard to avoid incorrectly classifying certain intermediate algebraic transformations as arithmetic errors.
+- Removed duplicate conditional logic introduced during code editing.
+
+### 2. Regression Test Improvements
+
+- Added test coverage for arithmetic errors involving constant terms.
+- Added a test to ensure that an incorrect coefficient transformation is not incorrectly classified as an arithmetic error.
+- Verified the expected corrected equation for supported arithmetic-error cases.
+- Retained existing sign-error and validator regression coverage.
+
+### 3. Automated Verification
+
+Executed the complete test suite using pytest.
+
+| Verification | Result |
+|---|---|
+| Total automated tests | 59 |
+| Passed | 59 |
+| Failed | 0 |
+
+### 4. Documentation and Version Control
+
+- Reviewed and updated `CHANGELOG.md` to reflect the arithmetic-error detection improvements.
+- Created a local Git commit:
+
+  `8be7c86 — Improve arithmetic error detection and add regression tests`
+
+- The commit includes changes to the validator, regression tests and changelog.
+- Pushing this commit to GitHub remains pending.
+
+### Engineering Outcome
+
+Arithmetic-error detection now covers additional tested cases involving coefficients and constants, with safeguards against a specific category of incorrect classification.
+
+The complete automated test suite passes with 59 tests.
+
+### Current Limitations
+
+- Arithmetic-error detection remains heuristic and limited to supported patterns.
+- Passing automated tests does not establish general mathematical correctness.
+- Handwritten equation recognition and OCR remain unimplemented.
+- Broader algebraic transformation coverage and evaluation are still required.
+
 
 ## Current Project Status
 
@@ -641,12 +696,14 @@ Regression coverage has been strengthened to help prevent the identified classif
 - Automated parser and validator tests.
 - Regression testing for arithmetic-error classification.
 
+
 ### Latest Verification
 
-- Complete automated test suite: **50 passed**.
+- Complete automated test suite: **59 passed**.
 - Test failures: **0**.
-- Focused arithmetic-error regression test: **passed**.
+- Regression tests cover arithmetic errors involving coefficients and constants, as well as cases that should not be classified as arithmetic errors.
 - Valid and invalid typed algebra examples manually tested through the Streamlit interface.
+
 
 ### Current Limitations
 
