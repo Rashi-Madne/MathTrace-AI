@@ -66,12 +66,12 @@ The current application follows this processing workflow:
 
 | Technology | Purpose |
 |---|---|
-| Python 3.12 | Core development |
-| SymPy | Symbolic mathematics and equation processing |
+| Python 3.12 | Core application development |
+| SymPy | Symbolic mathematics, equation representation and solution-set comparison |
 | Streamlit | Interactive web application |
-| pytest | Automated testing |
-| Pillow | Image-processing dependency for future development |
-| Git and GitHub | Version control and project collaboration |
+| pytest | Automated unit and integration testing |
+| Git and GitHub | Version control and project hosting |
+
 
 ## Project Structure
 
@@ -162,15 +162,17 @@ Run the complete test suite:
 pytest -v
 ```
 
+
 ### Latest Verification
 
 | Metric | Result |
 |---|---:|
-| Automated tests passed | 50 |
+| Automated tests passed | 69 |
+| Test execution time | 2.05 seconds |
 | Failed tests | 0 |
-| Focused regression test | Passed |
+| Focused regression tests | Passed |
 
-The test suite covers parser functionality, mathematical validation, selected error-detection patterns, invalid input handling and integration between components.
+The test suite covers parser functionality, mathematical validation, selected error-detection patterns, invalid input handling, and integration between components.
 
 ## Current Implementation Status
 
@@ -180,20 +182,20 @@ The test suite covers parser functionality, mathematical validation, selected er
 - Safe typed mathematical expression parsing using AST.
 - Equation parsing and multi-step solution processing.
 - SymPy-based equation and solution-set comparison.
-- Initial sign-error detection.
-- Possible arithmetic-error detection for selected patterns.
+- Detection of selected sign errors.
+- Detection of possible arithmetic errors for supported patterns.
 - First-error localization.
 - Corrected-equation generation for supported cases.
-- Initial Streamlit application.
+- Interactive Streamlit application.
 - Automated unit and integration tests.
 
-**Under Development**
+**Future Improvements**
 
 - Broader algebraic transformation support.
 - More reliable error classification.
-- Improved mathematical explanations.
+- Expanded mathematical explanations.
 - Additional edge-case handling.
-- Interface refinement and project evaluation.
+- Systematic evaluation using student-style mathematical solutions.
 
 **Not Yet Implemented**
 
@@ -202,6 +204,7 @@ The test suite covers parser functionality, mathematical validation, selected er
 - Image-based mathematical expression processing.
 - General-purpose mathematical error detection.
 - Advanced mathematics support.
+
 
 ## Current Limitations
 
