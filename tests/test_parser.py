@@ -1,6 +1,6 @@
 
 import pytest
-from sympy import Symbol
+from sympy import Symbol, Rational
 
 from mathtrace.parser import (
     validate_equation_format,
@@ -110,6 +110,12 @@ def test_parse_multiplication():
 def test_parse_division():
     assert parse_expression("x / 2") == Symbol("x") / 2
 
+def test_parse_integer_fraction_exactly():
+    assert parse_expression("2/3") == Rational(2, 3)
+
+
+def test_parse_fraction_addition_exactly():
+    assert parse_expression("1/2 + 1/3") == Rational(5, 6)
 
 def test_parse_exponentiation():
     assert parse_expression("x**2") == Symbol("x")**2

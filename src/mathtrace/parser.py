@@ -1,6 +1,7 @@
 
 import ast
 from dataclasses import dataclass
+import sympy
 from sympy import Eq, Symbol
 
 @dataclass
@@ -101,6 +102,9 @@ def parse_expression_node(node):
         if isinstance(node.op, ast.Div):
             if right_value == 0:
                 raise ValueError("Division by zero is not allowed.")
+
+            if isinstance(left_value, int) and isinstance(right_value, int):
+                return sympy.Rational(left_value, right_value)
 
             return left_value / right_value
 
