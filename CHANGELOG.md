@@ -215,6 +215,87 @@ The project is currently in its initial development stage. Changes are recorded 
 - Confirmed that local `main` and remote `origin/main` point to commit `7479b9f`.
 - Temporary untracked files were excluded from the commits.
 
+### Evaluation Dataset and Automated Evaluation — 2026-11-19
+
+#### Added
+
+- Created an initial manually labelled evaluation dataset in `evaluation/evaluation_cases.csv`.
+- Added 20 algebra solution cases across four categories:
+  - 5 correct solutions.
+  - 5 sign-error cases.
+  - 5 arithmetic-error cases.
+  - 5 other incorrect transformation cases.
+- Implemented `evaluation/run_evaluation.py` to automate comparison between expected and actual validator outputs.
+- Added evaluation checks for solution status, first detected error step and error category.
+
+#### Testing
+
+- Individually verified all 20 evaluation cases against the existing validator.
+- Successfully executed the automated evaluation script using:
+
+  `python -m evaluation.run_evaluation`
+
+- Initial evaluation results:
+  - Total cases: 20.
+  - Passed: 20.
+  - Failed: 0.
+  - Observed agreement: 100%.
+
+#### Notes
+
+- The initial evaluation dataset is manually designed and intended for preliminary validation of supported functionality.
+- The observed agreement applies only to these 20 evaluation cases and does not establish general mathematical accuracy.
+- Individual evaluation-result CSV generation, dataset expansion and detailed performance analysis remain pending.
+
+### Parser and Validator Robustness Improvements — 2026-11-21
+
+#### Added
+
+- Added regression tests for expressions containing up to 100 terms.
+- Added tests for positive terms, alternating signs, and combined variable and constant terms.
+- Added validator tests for equations with large coefficients.
+- Added coverage for detecting and correcting a tested arithmetic error involving large coefficients.
+
+#### Improved
+
+- Strengthened automated test coverage for large algebraic expressions.
+- Verified exact rational arithmetic for integer fractions.
+- Tested nested expressions, polynomial transformations and selected fractional solutions.
+
+#### Testing
+
+- Complete automated test suite: **76 passed**.
+- Parser tests: 46 passed.
+- Validator tests: 30 passed.
+- Verified valid and invalid large-coefficient equations.
+- Confirmed that the Streamlit application launches locally and its homepage loads successfully.
+
+#### Repository
+
+- Added and pushed commit:
+
+  `c178b04 — test: cover large algebraic expressions`
+
+### Streamlit Community Cloud Deployment — 2026-11-21
+
+#### Added
+
+- Deployed MathTrace AI to Streamlit Community Cloud.
+- Configured deployment using the GitHub repository.
+- Configured `app.py` as the application entry point.
+- Successfully launched the application using Python 3.14.
+
+#### Verification
+
+- Confirmed that the deployed Streamlit application starts successfully.
+- Confirmed that the application interface loads on the cloud deployment.
+
+#### Notes
+
+- Published as an initial research prototype.
+- The deployed application currently supports typed algebraic solution-step validation.
+- Generalized equation solving, handwritten equation recognition and broader mathematical error classification remain under development.
+
 ---
 
 ## Current Implementation Status
@@ -233,9 +314,11 @@ The project is currently in its initial development stage. Changes are recorded 
 | Corrected-equation generation for supported cases | Implemented |
 | Streamlit application interface | Implemented |
 | Refined application typography | Implemented |
-| Automated regression test suite | 69 tests passing |
+| Streamlit Community Cloud deployment | Deployed |
+| Automated regression test suite | 76 tests passing |
 | Handwritten equation recognition (OCR) | Not implemented |
 | Generalized algebraic error classification | Not implemented |
+| Standalone equation solving with detailed solution generation | Under development |
 
 ## Notes
 
@@ -243,5 +326,5 @@ The project is currently in its initial development stage. Changes are recorded 
 - Error detection is currently limited to selected linear-equation patterns and supported mathematical cases.
 - The validator uses symbolic mathematics and rule-based checks; it is not a trained machine-learning model.
 - Passing automated tests does not establish universal mathematical correctness.
-- OCR, broader mathematical transformation coverage and systematic evaluation remain future development work.
+- OCR, broader mathematical transformation coverage and expanded systematic evaluation remain under development.
 - Future changes will be documented under the `Unreleased` section until a formal version is published.
