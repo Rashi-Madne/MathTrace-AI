@@ -5,6 +5,7 @@ from mathtrace.validator import (
     get_solution_set,
     compare_equations,
     validate_solution_steps,
+    validate_text_solution_steps,
     explain_error
 )
 
@@ -300,3 +301,34 @@ def test_nested_denominators_preserve_all_restrictions():
     equation = parse_equation("1/(1/(x-2)) = 3")
 
     assert get_solution_set(equation, x) == FiniteSet(S(5))
+
+
+# --------------------------------------------------
+# 8. LARGE EQUATION ROBUSTNESS TESTS
+# --------------------------------------------------
+
+def test_validates_large_coefficient_equation():
+    steps = [
+        "5050*x + 5050 = 10100",
+        "5050*x = 5050",
+        "x = 1"
+    ]
+
+    result = validate_text_solution_steps(steps, x)
+
+    assert result["status"] == "valid"
+
+
+def test_detects_arithmetic_error_in_large_coefficient_equation():
+    steps = [
+        "5050*x + 5050 = 10100",
+        "5050*x = 5050",
+        "x = 2"
+    ]
+
+    result = validate_text_solution_steps(steps, x)
+
+    assert result["status"] == "invalid"
+    assert result["error_step"] == 2
+    assert result["error_category"] == "possible_arithmetic_error"
+    assert result["corrected_equation"] == "x = 1"

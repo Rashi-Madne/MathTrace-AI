@@ -292,3 +292,30 @@ def test_parse_division_by_expression_that_simplifies_to_zero():
 def test_parse_zero_raised_to_negative_power():
     with pytest.raises(ValueError):
         parse_expression("0**-1")
+
+
+def test_parse_100_positive_terms():
+    expression = " + ".join(
+        f"{i}*x" for i in range(1, 101)
+    )
+
+    assert parse_expression(expression) == 5050 * Symbol("x")
+
+
+def test_parse_100_alternating_sign_terms():
+    expression = " + ".join(
+        f"{i}*x" if i % 2 == 1 else f"-{i}*x"
+        for i in range(1, 101)
+    )
+
+    assert parse_expression(expression) == -50 * Symbol("x")
+
+
+def test_parse_100_variable_and_constant_terms():
+    expression = " + ".join(
+        f"{i}*x + {i}" for i in range(1, 101)
+    )
+
+    assert parse_expression(expression) == (
+        5050 * Symbol("x") + 5050
+    )
