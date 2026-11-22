@@ -1,0 +1,10 @@
+﻿case_id,category,steps,expected_status,expected_error_step,expected_error_category
+H001,correct,"3*x + 6 = 18;3*x = 12;x = 4",valid,,
+H002,correct,"x + 2 = 8;x = 6;2*x = 12",valid,,
+H003,sign_error,"2*x + 6 = 18;x + 3 = 9;x = 9 + 3",invalid,2,sign_error
+H004,arithmetic_error,"x + 2 = 8;x = 6;2*x = 12;x = 7",invalid,3,possible_arithmetic_error
+H005,correct,"x/4 + 2 = 5;x/4 = 3;x = 12",valid,,
+H006,correct,"-3*x + 9 = 0;-3*x = -9;x = 3",valid,,
+H007,sign_error,"x - 5 = 10;x = 10 - 5",invalid,1,sign_error
+H008,arithmetic_error,"4*x + 8 = 24;4*x = 16;x = 5",invalid,2,possible_arithmetic_error
+H009,other_incorrect,"2*x + 4 = 12;3*x = 8",invalid,1,

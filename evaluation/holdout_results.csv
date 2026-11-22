@@ -1,0 +1,10 @@
+﻿case_id,expected_status,actual_status,expected_error_step,actual_error_step,expected_error_category,actual_error_category,result
+H001,valid,valid,,,,,PASS
+H002,valid,valid,,,,,PASS
+H003,invalid,invalid,2,2,sign_error,sign_error,PASS
+H004,invalid,invalid,3,3,possible_arithmetic_error,possible_arithmetic_error,PASS
+H005,valid,valid,,,,,PASS
+H006,valid,valid,,,,,PASS
+H007,invalid,invalid,1,1,sign_error,sign_error,PASS
+H008,invalid,invalid,2,2,possible_arithmetic_error,possible_arithmetic_error,PASS
+H009,invalid,invalid,1,1,,,PASS

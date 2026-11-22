@@ -1,0 +1,10 @@
+metric,value
+total_cases,37
+true_positives,22
+true_negatives,15
+false_positives,0
+false_negatives,0
+accuracy,100.00%
+precision,100.00%
+recall,100.00%
+f1_score,100.00%

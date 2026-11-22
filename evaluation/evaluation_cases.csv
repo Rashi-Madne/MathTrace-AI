@@ -1,0 +1,29 @@
+﻿case_id,category,steps,expected_status,expected_error_step,expected_error_category
+MT001,correct,"2*x + 3 = 11;2*x = 8;x = 4",valid,,
+MT002,correct,"x + 5 = 12;x = 7",valid,,
+MT003,correct,"3*x - 6 = 12;3*x = 18;x = 6",valid,,
+MT004,correct,"4*x = 20;x = 5",valid,,
+MT005,correct,"2*(x + 3) = 14;2*x + 6 = 14;2*x = 8;x = 4",valid,,
+MT006,sign_error,"2*x + 3 = 11;2*x = 14",invalid,1,sign_error
+MT007,sign_error,"x + 5 = 12;x = 17",invalid,1,sign_error
+MT008,sign_error,"3*x - 6 = 12;3*x = 6",invalid,1,sign_error
+MT009,sign_error,"4*x + 7 = 19;4*x = 26",invalid,1,sign_error
+MT010,sign_error,"5*x - 4 = 16;5*x = 12",invalid,1,sign_error
+MT011,arithmetic_error,"2*x + 3 = 11;x = 5",invalid,1,possible_arithmetic_error
+MT012,arithmetic_error,"3*x - 6 = 12;x = 5",invalid,1,possible_arithmetic_error
+MT013,arithmetic_error,"4*x = 20;x = 4",invalid,1,possible_arithmetic_error
+MT014,arithmetic_error,"5*x + 5 = 30;x = 6",invalid,1,possible_arithmetic_error
+MT015,arithmetic_error,"2*x - 4 = 10;x = 8",invalid,1,possible_arithmetic_error
+MT016,other_incorrect,"2*x + 3 = 11;3*x = 8",invalid,1,
+MT017,other_incorrect,"x + 5 = 12;2*x = 7",invalid,1,
+MT018,other_incorrect,"3*x + 4 = 19;4*x = 15",invalid,1,
+MT019,other_incorrect,"5*x - 2 = 18;4*x = 20",invalid,1,
+MT020,other_incorrect,"2*x + 6 = 16;3*x = 10",invalid,1,
+MT021,correct,"x/2 + 3 = 7;x/2 = 4;x = 8",valid,,
+MT022,correct,"-2*x + 4 = 10;-2*x = 6;x = -3",valid,,
+MT023,correct,"2*(x + 3) = 14;2*x + 6 = 14;2*x = 8;x = 4",valid,,
+MT024,other_incorrect,"x**2 = 9;x = 3",invalid,1,
+MT025,correct,"3*(x + 2) = 15;3*x + 6 = 15;3*x = 9;x = 3",valid,,
+MT026,correct,"5 - 2*x = 11;-2*x = 6;x = -3",valid,,
+MT027,correct,"x/3 + 2 = 5;x/3 = 3;x = 9",valid,,
+MT028,arithmetic_error,"2*x - 4 = 10;2*x = 14;x = 8",invalid,2,possible_arithmetic_error
